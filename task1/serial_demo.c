@@ -135,19 +135,48 @@ static void utoa_hex(unsigned long v, char* buf){
  *   %p – pointer in hex (with 0x prefix)
  *   %% – literal percent sign
  */
-static int tiny_printf(const char* fmt, ...){
-    va_list ap; va_start(ap, fmt);
+static int tiny_printf(const char* fmt, ...) {
+    va_list ap;
+    va_start(ap, fmt);
+
     const char* p;
-    for (p = fmt; *p; ++p)
-        if(*p!='%'){ dbgu_putc((unsigned char)*p); continue; }
-        ++p; if(!*p){ dbgu_putc('%'); break; }
-        if(*p=='%'){ dbgu_putc('%'); }
-        else if(*p=='c'){ dbgu_putc((unsigned char)va_arg(ap,int)); }
-        else if(*p=='s'){ const char* s=va_arg(ap,const char*); if(!s)s="(null)"; dbgu_puts(s); }
-        else if(*p=='x'){ unsigned int v=va_arg(ap,unsigned int); char b[9]; utoa_hex(v,b); dbgu_puts(b); }
-        else if(*p=='p'){ void* pv=va_arg(ap,void*); unsigned long v=(unsigned long)(uintptr_t)pv; char b[2*sizeof(unsigned long)+1]; dbgu_puts("0x"); utoa_hex(v,b); dbgu_puts(b); }
-        else { dbgu_putc('%'); dbgu_putc((unsigned char)*p); }
+    for (p = fmt; *p; ++p) {
+        if (*p != '%') {
+            dbgu_putc((unsigned char)*p);
+            continue;
+        }
+        ++p;
+        if (!*p) {
+            dbgu_putc('%');
+            break;
+        }
+        if (*p == '%') { dbgu_putc('%'); }
+        else if (*p == 'c') { dbgu_putc((unsigned char)va_arg(ap, int)); }
+        else if (*p == 's') {
+            const char* s = va_arg(ap, const char*);
+            if (!s) s = "(null)";
+            dbgu_puts(s);
+        }
+        else if (*p == 'x') {
+            unsigned int v = va_arg(ap, unsigned int);
+            char b[9];
+            utoa_hex(v, b);
+            dbgu_puts(b);
+        }
+        else if (*p == 'p') {
+            void* pv = va_arg(ap, void*);
+            unsigned long v = (unsigned long)(uintptr_t)pv;
+            char b[2*sizeof(unsigned long)+1];
+            dbgu_puts("0x");
+            utoa_hex(v, b);
+            dbgu_puts(b);
+        }
+        else {
+            dbgu_putc('%');
+            dbgu_putc((unsigned char)*p);
+        }
     }
+
     va_end(ap);
     return 0;
 }
