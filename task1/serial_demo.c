@@ -137,7 +137,8 @@ static void utoa_hex(unsigned long v, char* buf){
  */
 static int tiny_printf(const char* fmt, ...){
     va_list ap; va_start(ap, fmt);
-    for(const char* p=fmt; *p; ++p){
+    const char* p;
+    for (p = fmt; *p; ++p)
         if(*p!='%'){ dbgu_putc((unsigned char)*p); continue; }
         ++p; if(!*p){ dbgu_putc('%'); break; }
         if(*p=='%'){ dbgu_putc('%'); }
