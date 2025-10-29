@@ -14,8 +14,8 @@ CFLAGS := -mcpu=arm926ej-s -ffreestanding -nostdlib -DUARTCLK=$(UARTCLK) -DBAUD=
 ASFLAGS := -mcpu=arm926ej-s
 LDFLAGS := -Wl,-Ttext=0x10000 -Wl,-e,_start
 
-QEMU := qemu-system-arm
-QEMUFLAGS := -M versatilepb -nographic -monitor none -serial stdio -kernel $(OUT)
+QEMU := qemu-bsprak
+QEMUFLAGS := -kernel $(OUT)
 
 .PHONY: all run clean
 
